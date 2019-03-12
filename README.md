@@ -1,1 +1,167 @@
-# ubuntu-server-setup
+# Linux-Server-Configuration-UDACITY
+This is the fifth project for "Full Stack Web Developer Nanodegree" on Udacity. 
+
+In this project, a Linux virtual machine needs to be configurated to support the Item Catalog website.
+
+You can visit it [here](http://dev.project.com.3.120.111.111.xip.io/)
+
+## Tasks
+Get your server.
+1. Start a new Ubuntu Linux server instance on Amazon Lightsail. There are full details on setting up your Lightsail instance on the next page.
+2. Follow the instructions provided to SSH into your server.
+3. Update all currently installed packages.
+4. Change the SSH port from 22 to 2200. Make sure to configure the Lightsail firewall to allow it.
+5. Configure the Uncomplicated Firewall (UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123).
+6. Create a new user account named grader.
+7. Give grader the permission to sudo.
+8. Create an SSH key pair for grader using the ssh-keygen tool.
+9. Configure the local timezone to UTC.
+10. Install and configure Apache to serve a Python mod_wsgi application.
+11. Install and configure PostgreSQL:
+12. Install git.
+13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
+14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
+
+## Instruction
+
+## Create instance on Amazon Lightsail
+1. Go to [Amazon Lightsail](https://lightsail.aws.amazon.com/)
+2. Create your ssh key
+    ```
+    ssh-keygen
+    ```
+3. Upload your ssh key to Amazon
+4. Create instance with Ubuntu 16.04 (select your uploaded ssh key)
+
+## Instructions for SSH access to the instance
+1. Download Private Key from Amazon
+2. Move the private key file into the folder `.ssh`
+	```
+	cd ~/.ssh
+	mv ~/Downloads/your_key.rsa ~/.ssh/
+	```
+3. Open your terminal and type in
+	```
+	chmod 600 ~/.ssh/your_key.rsa
+	```
+4. In your terminal, type in (default user for your instance will be **ubuntu**) 
+	```
+	ssh -i ~/.ssh/your_key.rsa ubuntu@3.120.111.111
+	```
+	
+## Update all currently installed packages
+
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+## Change the SSH port from 22 to 2200
+1. Open config and then change Port 22 to Port 2200 , save & quit.
+    ```
+    sudo vi /etc/ssh/sshd_config
+    ```
+2. Reload SSH using 
+    ```
+    sudo service ssh restart
+    ```
+
+## Configure the Uncomplicated Firewall (UFW)
+	sudo ufw allow 2200/tcp
+	sudo ufw allow 80/tcp
+	sudo ufw allow 123/udp
+	sudo ufw enable
+	sudo ufw status
+	
+## Create a new user grader & sudo
+
+1. Create user
+    ```
+    sudo adduser grader
+    ```
+2. Add sudo
+    ```
+    sudo vi /etc/sudoers
+    touch /etc/sudoers.d/grader
+    sudo vi /etc/sudoers.d/grader
+    # paste: grader ALL=(ALL:ALL) ALL
+    # save and exit
+    ```
+3. Test sudo
+    ```
+    su - grader
+    sudo ls -la /root
+    ``` 
+
+## Set ssh login using keys
+1. Generate keys on local machine using`ssh-keygen` ; then save the private key in `~/.ssh` on local machine
+2. Deploy public key on instance
+
+	On your instance:
+	```
+	$ su - grader
+	$ mkdir .ssh
+	$ touch .ssh/authorized_keys
+	$ vi .ssh/authorized_keys
+	```
+	Copy the public key generated on your local machine to this file and save
+	```
+	$ chmod 700 .ssh
+	$ chmod 644 .ssh/authorized_keys
+	```
+	
+3. Reload SSH using `service ssh restart`
+4. Now you can use ssh to login with the new user you created
+
+	```
+	ssh grader@3.120.111.111 -i ~/.ssh/grader -p 2200
+	```
+ 
+## Configure the local timezone to UTC
+1. Configure the time zone `sudo dpkg-reconfigure tzdata`
+2. It is already set to UTC.
+
+## Install and configure Apache to serve a Python mod_wsgi application
+1. Install Apache `sudo apt-get install apache2`
+2. Install mod_wsgi `sudo apt-get install libapache2-mod-wsgi-py3`
+3. Restart Apache `sudo service apache2 restart`
+
+## Install and configure PostgreSQL
+1. Install 
+    ```
+    sudo apt-get install postgresql postgresql-contrib`
+    sudo su - postgres # default user for PostgreSQL
+    psql
+    ```
+2. Create new db user
+    ```
+    CREATE USER catalog WITH PASSWORD 'password';
+    ALTER USER catalog CREATEDB;
+    CREATE DATABASE catalog WITH OWNER catalog;
+    \c catalog
+    REVOKE ALL ON SCHEMA public FROM public;
+    GRANT ALL ON SCHEMA public TO catalog;
+    \q
+    exit
+    ```
+3. Update Flask projectL
+    - Change create engine line in your `__init__.py` and `database_setup.py` to: 
+    `engine = create_engine('postgresql://catalog:password@localhost/catalog')`
+    - `python /var/www/catalog/catalog/database_setup.py`
+- Make sure no remote connections to the database are allowed. 
+Check if the contents of this file `sudo nano /etc/postgresql/9.5/main/pg_hba.conf` looks like this:
+```
+local   all             postgres                                peer
+local   all             all                                     peer
+host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+```
+ 
+## Install git, clone and setup your Catalog App project.
+1. Install Git using 
+    ```
+    sudo apt-get install git
+    ```
+2. Clone repo:
+    ```
+    git clone https://github.com/torston/item-catalog.git
+    ```
