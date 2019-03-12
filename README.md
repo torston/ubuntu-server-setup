@@ -66,6 +66,8 @@ sudo apt-get upgrade
     ```
 
 ## Configure the Uncomplicated Firewall (UFW)
+1. UFW
+```
     sudo ufw default deny incoming
     sudo ufw default deny incoming
 	sudo ufw allow 2200/tcp
@@ -73,6 +75,8 @@ sudo apt-get upgrade
 	sudo ufw allow 123/udp
 	sudo ufw enable
 	sudo ufw status
+```
+2. Setup ports vie Amazon Console in **Instance -> Networing -> Firewall**
 	
 ## Create a new user grader & sudo
 
