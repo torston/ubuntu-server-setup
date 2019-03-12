@@ -66,8 +66,10 @@ sudo apt-get upgrade
     ```
 
 ## Configure the Uncomplicated Firewall (UFW)
+    sudo ufw default deny incoming
+    sudo ufw default deny incoming
 	sudo ufw allow 2200/tcp
-	sudo ufw allow 80/tcp
+	sudo ufw allow 80/tcp # or simply www
 	sudo ufw allow 123/udp
 	sudo ufw enable
 	sudo ufw status
@@ -143,7 +145,7 @@ sudo apt-get upgrade
     \q
     exit
     ```
-3. Update Flask projectL
+3. Update Flask project (after next step)
     - Change create engine line in your `__init__.py` and `database_setup.py` to: 
     `engine = create_engine('postgresql://catalog:password@localhost/catalog')`
     - `python /var/www/catalog/catalog/database_setup.py`
