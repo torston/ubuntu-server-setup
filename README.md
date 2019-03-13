@@ -254,3 +254,13 @@ python3 database_fill.py
 - Resatart Apache ```sudo service apache2 start```
 - ```curl localhost``` and check loaded
 - Open in browser: http://dev.project.com.3.120.111.111.xip.io/
+
+## Resources
+
+- Other Udacity students
+- https://stackoverflow.com
+- https://askubuntu.com/
+- https://www.digitalocean.com/community/tutorials/
+- Youtube videos
+- https://knowledge.udacity.com/
+- http://leonwang.me/post/deploy-flask
