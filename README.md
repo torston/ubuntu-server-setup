@@ -5,6 +5,9 @@ In this project, a Linux virtual machine needs to be configurated to support the
 
 You can visit it [here](http://dev.project.com.3.120.111.111.xip.io/)
 
+- IP Address: http://dev.project.com.3.120.111.111.xip.io/
+- Link: http://3.120.111.111/
+
 ## Tasks
 Get your server.
 1. Start a new Ubuntu Linux server instance on Amazon Lightsail. There are full details on setting up your Lightsail instance on the next page.
@@ -149,10 +152,6 @@ sudo apt-get upgrade
     \q
     exit
     ```
-3. Update Flask project (after next step)
-    - Change create engine line in your `__init__.py` and `database_setup.py` to: 
-    `engine = create_engine('postgresql://catalog:password@localhost/catalog')`
-    - `python /var/www/catalog/catalog/database_setup.py`
 - Make sure no remote connections to the database are allowed. 
 Check if the contents of this file `sudo nano /etc/postgresql/9.5/main/pg_hba.conf` looks like this:
 ```
@@ -171,3 +170,87 @@ host    all             all             ::1/128                 md5
     ```
     git clone https://github.com/torston/item-catalog.git
     ```
+3. Move project into directory `var/www/FlaskApp/FlaskApp`  (create new folder if needed)
+
+## Setup project
+
+### Install Flask and other dependencies
+  - Install pip with `sudo apt-get install python3-pip`
+  - Install virtualenv `sudo pip3 install virtualenv`
+  - Setup it in project folder:
+  ```
+  sudo virtualenv venv
+  source venv/bin/activate
+  ```
+  - Install Flask `pip3 install Flask`
+  - Install other project dependencies `sudo pip3 install httplib2 oauth2client sqlalchemy psycopg2 flask-bootstrap`
+
+### Update path of client_secrets.json file
+  - Go to Google console https://console.developers.google.com/apis
+  - Go to `Credentials -> OAuth  consent screen` and add `xip.io` to **Authorised domains**
+  - Add `http://dev.project.com.3.120.111.111.xip.io` to **Authorised JavaScript origins**
+  - Add `http://dev.project.com.3.120.111.111.xip.io/` and `http://dev.project.com.3.120.111.111.xip.io/login` to **Authorised redirect URIs**
+  - Copy new client_secrets.json and replace exited file content
+  
+### Configure and enable a new virtual host
+  - Run this: `sudo vi /etc/apache2/sites-available/FlaskApp.conf`
+  - Paste this code: 
+  ```                                                                                                                      
+<VirtualHost *:80>
+            ServerName yourdomain.com
+            ServerAdmin youemail@email.com
+            WSGIProcessGroup flaskapp
+            WSGIDaemonProcess flaskapp threads=15 python-home=/var/www/FlaskApp/FlaskApp/ python-path=/var/www/FlaskApp/FlaskApp
+            WSGIScriptAlias / /var/www/FlaskApp/flaskapp.wsgi
+            <Directory /var/www/FlaskApp/FlaskApp/>
+                    Order allow,deny
+                    Allow from all
+            </Directory>
+            Alias /static /var/www/FlaskApp/FlaskApp/static
+            <Directory /var/www/FlaskApp/FlaskApp/static/>
+                    Order allow,deny
+                    Allow from all
+            </Directory>
+            ErrorLog ${APACHE_LOG_DIR}/error.log
+            LogLevel warn
+            CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>                                                                                                       
+  ```
+  - Enable the virtual host 
+  ```
+  sudo a2dissite 000-default.conf
+  sudo a2ensite FlaskApp
+  ```
+
+### Update application DB 
+- Change create engine line in your `__init__.py` and `database_setup.py` to: 
+    `engine = create_engine('postgresql://catalog:password@localhost/catalog')`
+- Setup DB:
+```
+python3 database_setup.py
+python3 database_fill.py
+```
+
+### Configurate mod_wsgi
+- Create wsgi file in **/var/www/FlaskApp** with name **flaskapp.wsgi** and paste:
+    ```
+    activate_this = '/var/www/FlaskApp/FlaskApp/venv3/bin/activate_this.py'
+    with open(activate_this) as file_:
+        exec(file_.read(), dict(__file__=activate_this))
+    
+    #!/usr/bin/python
+    import sys
+    import logging
+    logging.basicConfig(stream=sys.stderr)
+    sys.path.insert(0, "/var/www/FlaskApp/FlaskApp/")
+    sys.path.insert(0, "/var/www/FlaskApp/")
+    
+    from FlaskApp import app as application
+    application.secret_key = "some_key"
+    ```
+- Enable mod_wsgi
+```sudo a2enmod wsgi```
+### Final Step
+- Resatart Apache ```sudo service apache2 start```
+- ```curl localhost``` and check loaded
+- Open in browser: http://dev.project.com.3.120.111.111.xip.io/
