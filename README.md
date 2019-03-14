@@ -57,6 +57,7 @@ Get your server.
 ```
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get dist-upgrade
 ```
 ## Change the SSH port from 22 to 2200
 1. Open config and then change Port 22 to Port 2200 , save & quit.
