@@ -67,6 +67,13 @@ sudo apt-get upgrade
     ```
     sudo service ssh restart
     ```
+3. Check **PermitRootLogin** for ssh, should be **no**, if not change:
+    ```
+    cat /etc/ssh/sshd_config | grep PermitRootLogin # check
+    sudo vi /etc/ssh/sshd_config
+    # PermitRootLogin no
+    sudo service ssh restart
+    ```
 
 ## Configure the Uncomplicated Firewall (UFW)
 1. UFW
