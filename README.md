@@ -8,6 +8,8 @@ You can visit it [here](http://dev.project.com.3.120.111.111.xip.io/)
 - IP Address: http://dev.project.com.3.120.111.111.xip.io/
 - Link: http://3.120.111.111/
 
+Warning: SERVER IS STOPPED
+
 ## Tasks
 Get your server.
 1. Start a new Ubuntu Linux server instance on Amazon Lightsail. There are full details on setting up your Lightsail instance on the next page.
