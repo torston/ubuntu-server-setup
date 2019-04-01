@@ -3,8 +3,8 @@ This is the fifth project for "Full Stack Web Developer Nanodegree" on Udacity.
 
 In this project, a Linux virtual machine needs to be configurated to support the Item Catalog website.
 
-- IP Address: http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/
-- Link: http://xxx.xxx.xxx.xxx/
+- IP Address: http://xxx.xxx.xxx.xxx/
+- Link: http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/
 
 NOTE: xxx.xxx.xxx.xxx - your IP Address
 
