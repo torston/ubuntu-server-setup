@@ -3,10 +3,10 @@ This is the fifth project for "Full Stack Web Developer Nanodegree" on Udacity.
 
 In this project, a Linux virtual machine needs to be configurated to support the Item Catalog website.
 
-You can visit it [here](http://dev.project.com.3.120.111.111.xip.io/)
+- IP Address: http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/
+- Link: http://xxx.xxx.xxx.xxx/
 
-- IP Address: http://dev.project.com.3.120.111.111.xip.io/
-- Link: http://3.120.111.111/
+NOTE: xxx.xxx.xxx.xxx - your IP Address
 
 Warning: SERVER IS STOPPED
 
@@ -51,7 +51,7 @@ Get your server.
 	```
 4. In your terminal, type in (default user for your instance will be **ubuntu**) 
 	```
-	ssh -i ~/.ssh/your_key.rsa ubuntu@3.120.111.111
+	ssh -i ~/.ssh/your_key.rsa ubuntu@xxx.xxx.xxx.xxx
 	```
 	
 ## Update all currently installed packages
@@ -132,7 +132,7 @@ sudo apt-get dist-upgrade
 4. Now you can use ssh to login with the new user you created
 
 	```
-	ssh grader@3.120.111.111 -i ~/.ssh/grader -p 2200
+	ssh grader@xxx.xxx.xxx.xxx -i ~/.ssh/grader -p 2200
 	```
  
 ## Configure the local timezone to UTC
@@ -198,8 +198,8 @@ host    all             all             ::1/128                 md5
 ### Update path of client_secrets.json file
   - Go to Google console https://console.developers.google.com/apis
   - Go to `Credentials -> OAuth  consent screen` and add `xip.io` to **Authorised domains**
-  - Add `http://dev.project.com.3.120.111.111.xip.io` to **Authorised JavaScript origins**
-  - Add `http://dev.project.com.3.120.111.111.xip.io/` and `http://dev.project.com.3.120.111.111.xip.io/login` to **Authorised redirect URIs**
+  - Add `http://dev.project.com.xxx.xxx.xxx.xxx.xip.io` to **Authorised JavaScript origins**
+  - Add `http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/` and `http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/login` to **Authorised redirect URIs**
   - Copy new client_secrets.json and replace exited file content
   
 ### Configure and enable a new virtual host
@@ -263,7 +263,7 @@ python3 database_fill.py
 ### Final Step
 - Resatart Apache ```sudo service apache2 start```
 - ```curl localhost``` and check loaded
-- Open in browser: http://dev.project.com.3.120.111.111.xip.io/
+- Open in browser: http://dev.project.com.xxx.xxx.xxx.xxx.xip.io/
 
 ## Resources
 
